@@ -2,7 +2,7 @@
 
 > This Matrix was extracted from The-Oracle-Construct
 
-**Inherited from**: The-Oracle-Construct @ `4e1792e0c98a47102a6909199ebdc0a1bd5a60bd`
+**Inherited from**: The-Oracle-Construct @ `157c2038b13315c5e4d71bc631acbd135141980f`
 **Date**: 2026-01-13
 **Source**: https://github.com/Jarkius/The-Oracle-Construct
 

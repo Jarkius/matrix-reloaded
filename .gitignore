@@ -18,8 +18,9 @@ venv/
 .env
 .env.local
 
-# Audio cache (regenerated)
+# Audio cache (regenerated at runtime)
 psi/matrix/audio_cache/*.wav
+.claude/audio/tts-*.wav
 
 # Logs
 *.log
