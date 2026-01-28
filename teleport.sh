@@ -200,16 +200,55 @@ echo -e "${CYAN}[5/6] Downloading voice models...${NC}"
 VOICE_DIR="$HOME/.claude/piper-voices"
 mkdir -p "$VOICE_DIR"
 
-# Download Oracle voice (kristin)
-MODEL_NAME="en_US-kristin-medium"
-if [[ ! -f "$VOICE_DIR/${MODEL_NAME}.onnx" ]]; then
-    echo "  Downloading ${MODEL_NAME} (~63MB)..."
-    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/kristin/medium/${MODEL_NAME}.onnx" \
-        -o "$VOICE_DIR/${MODEL_NAME}.onnx"
-    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/kristin/medium/${MODEL_NAME}.onnx.json" \
-        -o "$VOICE_DIR/${MODEL_NAME}.onnx.json"
+# Helper function to download a voice model
+download_voice() {
+    local name="$1"
+    local url_path="$2"
+    local display_name="$3"
+
+    if [[ ! -f "$VOICE_DIR/${name}.onnx" ]]; then
+        echo "  Downloading ${display_name}..."
+        curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/${url_path}/${name}.onnx" \
+            -o "$VOICE_DIR/${name}.onnx"
+        curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/${url_path}/${name}.onnx.json" \
+            -o "$VOICE_DIR/${name}.onnx.json"
+    fi
+    echo "  ✓ ${display_name}"
+}
+
+# Core Agent Voices (~400MB total)
+download_voice "en_US-kristin-medium" "en/en_US/kristin/medium" "Oracle (kristin)"
+download_voice "en_US-ryan-high" "en/en_US/ryan/high" "Neo (ryan-high)"
+download_voice "en_US-bryce-medium" "en/en_US/bryce/medium" "Tank (bryce)"
+download_voice "en_US-danny-low" "en/en_US/danny/low" "Smith (danny-low)"
+download_voice "en_GB-alan-medium" "en/en_GB/alan/medium" "Architect (alan)"
+download_voice "en_US-hfc_male-medium" "en/en_US/hfc_male/medium" "System (hfc_male)"
+download_voice "en_US-lessac-medium" "en/en_US/lessac/medium" "Scribe (lessac)"
+download_voice "en_US-norman-medium" "en/en_US/norman/medium" "Mainframe (norman)"
+
+# Jenny voice (Trinity, Woman in Red) - different path structure
+if [[ ! -f "$VOICE_DIR/jenny.onnx" ]]; then
+    echo "  Downloading Trinity (jenny)..."
+    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/jenny_dioco/medium/en_GB-jenny_dioco-medium.onnx" \
+        -o "$VOICE_DIR/jenny.onnx"
+    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/jenny_dioco/medium/en_GB-jenny_dioco-medium.onnx.json" \
+        -o "$VOICE_DIR/jenny.onnx.json"
 fi
-echo "  ✓ Oracle voice: $MODEL_NAME"
+echo "  ✓ Trinity (jenny)"
+
+# Optional: Morpheus (carlin-high) - custom fine-tuned voice
+if [[ ! -f "$VOICE_DIR/en_US-carlin-high.onnx" ]]; then
+    echo -e "  ${YELLOW}⚠ Morpheus voice (carlin-high) - custom model, not auto-downloaded${NC}"
+    echo "    See: https://github.com/Jarkius/matrix-reloaded#custom-voices"
+fi
+
+# Optional: Trump voice - custom fine-tuned voice
+if [[ ! -f "$VOICE_DIR/en_US-trump-high.onnx" ]]; then
+    echo -e "  ${YELLOW}⚠ Trump voice - custom model, not auto-downloaded${NC}"
+fi
+
+echo ""
+echo "  Voice models stored in: $VOICE_DIR"
 
 # ============================================
 # Phase 6: Configure Integration

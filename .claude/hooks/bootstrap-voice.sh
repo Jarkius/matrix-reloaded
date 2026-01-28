@@ -64,6 +64,58 @@ piper_works() {
   return 0
 }
 
+# Download a single voice model
+download_voice() {
+  local name="$1"
+  local url_path="$2"
+  local display_name="$3"
+  local voice_dir="$HOME/.claude/piper-voices"
+
+  if [[ ! -f "$voice_dir/${name}.onnx" ]]; then
+    log_info "Downloading ${display_name}..."
+    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/${url_path}/${name}.onnx" \
+      -o "$voice_dir/${name}.onnx"
+    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/${url_path}/${name}.onnx.json" \
+      -o "$voice_dir/${name}.onnx.json"
+  fi
+  log_success "${display_name}"
+}
+
+# Download all agent voice models (~400MB total)
+download_all_voices() {
+  local voice_dir="$HOME/.claude/piper-voices"
+  mkdir -p "$voice_dir"
+
+  log_info "Downloading agent voice models (~400MB total)..."
+
+  # Core Agent Voices
+  download_voice "en_US-kristin-medium" "en/en_US/kristin/medium" "Oracle (kristin)"
+  download_voice "en_US-ryan-high" "en/en_US/ryan/high" "Neo (ryan-high)"
+  download_voice "en_US-bryce-medium" "en/en_US/bryce/medium" "Tank (bryce)"
+  download_voice "en_US-danny-low" "en/en_US/danny/low" "Smith (danny-low)"
+  download_voice "en_GB-alan-medium" "en/en_GB/alan/medium" "Architect (alan)"
+  download_voice "en_US-hfc_male-medium" "en/en_US/hfc_male/medium" "System (hfc_male)"
+  download_voice "en_US-lessac-medium" "en/en_US/lessac/medium" "Scribe (lessac)"
+  download_voice "en_US-norman-medium" "en/en_US/norman/medium" "Mainframe (norman)"
+
+  # Jenny voice (Trinity, Woman in Red) - different naming
+  if [[ ! -f "$voice_dir/jenny.onnx" ]]; then
+    log_info "Downloading Trinity (jenny)..."
+    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/jenny_dioco/medium/en_GB-jenny_dioco-medium.onnx" \
+      -o "$voice_dir/jenny.onnx"
+    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/jenny_dioco/medium/en_GB-jenny_dioco-medium.onnx.json" \
+      -o "$voice_dir/jenny.onnx.json"
+  fi
+  log_success "Trinity (jenny)"
+
+  # Note about custom voices
+  if [[ ! -f "$voice_dir/en_US-carlin-high.onnx" ]]; then
+    log_warn "Morpheus voice (carlin-high) - custom model, not auto-downloaded"
+  fi
+
+  log_success "Voice models stored in: $voice_dir"
+}
+
 # Bootstrap for macOS (Intel or Apple Silicon)
 bootstrap_macos() {
   local arch=$(uname -m)
@@ -160,18 +212,8 @@ bootstrap_macos() {
   # Set provider to piper (not macos)
   echo "piper" > "$CLAUDE_DIR/tts-provider.txt"
 
-  # Download voice model if needed
-  VOICE_DIR="$HOME/.claude/piper-voices"
-  mkdir -p "$VOICE_DIR"
-
-  if [[ ! -f "$VOICE_DIR/en_US-kristin-medium.onnx" ]]; then
-    log_info "Downloading Oracle voice model (~63MB)..."
-    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/kristin/medium/en_US-kristin-medium.onnx" \
-      -o "$VOICE_DIR/en_US-kristin-medium.onnx"
-    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/kristin/medium/en_US-kristin-medium.onnx.json" \
-      -o "$VOICE_DIR/en_US-kristin-medium.onnx.json"
-  fi
-  log_success "Voice model: en_US-kristin-medium"
+  # Download all agent voice models
+  download_all_voices
 
   # Check optional dependencies
   if ! has_command ffmpeg; then
@@ -221,18 +263,8 @@ bootstrap_linux() {
   # Set provider to piper
   echo "piper" > "$CLAUDE_DIR/tts-provider.txt"
 
-  # Download voice model
-  VOICE_DIR="$HOME/.claude/piper-voices"
-  mkdir -p "$VOICE_DIR"
-
-  if [[ ! -f "$VOICE_DIR/en_US-kristin-medium.onnx" ]]; then
-    log_info "Downloading Oracle voice model..."
-    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/kristin/medium/en_US-kristin-medium.onnx" \
-      -o "$VOICE_DIR/en_US-kristin-medium.onnx"
-    curl -sL "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/kristin/medium/en_US-kristin-medium.onnx.json" \
-      -o "$VOICE_DIR/en_US-kristin-medium.onnx.json"
-  fi
-  log_success "Voice model ready"
+  # Download all agent voice models
+  download_all_voices
 
   # Check optional dependencies
   if ! has_command sox; then
