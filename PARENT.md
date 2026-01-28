@@ -2,8 +2,8 @@
 
 > This Matrix was extracted from The-Oracle-Construct
 
-**Inherited from**: The-Oracle-Construct @ `738e82f76bab22e90a2a351fb5c38fc7d7b6261f`
-**Date**: 2026-01-13
+**Inherited from**: The-Oracle-Construct @ `a71a6efff854e775a08241c4fe64a4c2f38d0fac`
+**Date**: 2026-01-28
 **Source**: https://github.com/Jarkius/The-Oracle-Construct
 
 ## What's Included
@@ -11,22 +11,27 @@
 ### Complete System
 - All 17 Source chapters
 - All 39 workflows
-- All 8 agent personalities
-- Full voice system (Piper TTS)
-- Hooks and automation
+- All 8 agent personalities (+ 2 system agents)
+- Full voice system (Piper TTS with 9 voices)
+- macOS `say` fallback when Piper fails
+- 50+ hooks and automation scripts
+- Apple Silicon (M1/M2/M3/M4) support
 
 ### Ready to Operate
 Run `./teleport.sh` to bootstrap on a new machine.
 
 ## Developed Here
 
-*Your unique patterns go here*
+*Improvements made in matrix-reloaded*
 
-- [ ] ...
+- [x] Apple Silicon x86_64 Homebrew support (teleport.sh)
+- [x] Multi-voice download (9 agents)
+- [x] macOS say fallback with alert message
+- [x] bootstrap-voice.sh full voice setup
 
 ## Candidates for Reunion
 
-*Universal patterns to contribute back*
+*Universal patterns to contribute back to The-Oracle-Construct*
 
 - [ ] ...
 

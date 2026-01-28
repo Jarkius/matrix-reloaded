@@ -51,34 +51,40 @@ Agents use different AI models based on task complexity:
 
 See `psi/memory/adr/ADR-003-hierarchical-mind-architecture.md` for full details.
 
-## 📂 Workspace Structure
+## 📂 Project Structure
 
 ```
-~/ghq/github.com/Jarkius/    # GHQ Root (Canonical Repos)
-├── The-Oracle-Construct → ~/workspace/The-matrix  # Symlink
-├── cis-modern/              # CIS Modernization
-└── cis-legacy/              # Legacy PHP
-
-~/workspace/
-├── The-matrix/              # AI Development Environment (HOME)
-│   ├── .agent/workflows/    # Slash command definitions (*.md)
-│   ├── .claude/             # Claude Code parallel world
-│   │   ├── agents/          # Agent personality definitions
-│   │   ├── commands/        # Command definitions
-│   │   └── config/          # Voice, audio settings
-│   └── psi/                 # AI Brain ("External Memory")
-│       ├── The_Source/      # Sacred philosophy (protected)
-│       ├── learn/           # Knowledge gathering
-│       │   ├── inbox.md     # Quick capture
-│       │   ├── active/      # Current research
-│       │   └── archive/     # Completed research
-│       ├── projects/        # Symlinks to ~/ghq repos
-│       ├── memory/          # Learnings, retrospectives, ADRs
-│       ├── matrix/          # Voice system
-│       └── active/          # Runtime scripts
+matrix-reloaded/
+├── CLAUDE.md                    # This file - AI DNA
+├── README.md                    # Human documentation
+├── PARENT.md                    # Origin tracking
+├── teleport.sh                  # One-command setup
 │
-├── cis-modern → ~/ghq/.../  # Symlink
-└── cis-legacy → ~/ghq/.../  # Symlink
+├── psi/ (ψ symlink)             # AI Brain ("External Memory")
+│   ├── The_Source/              # 17 philosophy chapters (protected)
+│   │   └── SOUL_MANIFEST.sha256 # Integrity checksums
+│   ├── matrix/                  # Voice system
+│   │   ├── voice.sh             # TTS client (speaks)
+│   │   └── voice_server.py      # Queue server
+│   ├── memory/                  # Wisdom storage
+│   │   ├── learnings/           # Distilled patterns
+│   │   ├── retrospectives/      # Session records
+│   │   └── adr/                 # Architecture decisions
+│   ├── learn/                   # Knowledge capture
+│   │   ├── inbox.md             # Quick notes
+│   │   ├── active/              # Current research
+│   │   └── archive/             # Completed
+│   └── active/                  # Runtime scripts
+│
+├── .agent/workflows/            # 39 slash command definitions
+│
+└── .claude/
+    ├── agents/                  # 8 Council personalities
+    ├── hooks/                   # 50+ automation scripts
+    ├── commands/                # Command loaders
+    └── config/                  # Voice configuration
+
+~/.claude/piper-voices/          # Voice models (downloaded by teleport)
 ```
 
 ## 🛡️ Prime Directives
@@ -89,11 +95,29 @@ See `psi/memory/adr/ADR-003-hierarchical-mind-architecture.md` for full details.
 5.  **Proactive Care**: If it's important, do it. Don't wait to be asked.
 6.  **Right Mind for the Task**: Use Haiku for search, Sonnet for learning, Opus for wisdom.
 
-## 🚀 Current Mission: CIS Modernization
-- **Legacy**: PHP/MySQL inventory system.
-- **Modern**: React SPA → Laravel API → Legacy DB (`tis_users`).
-- **Auth**: Custom MD5 bridge for legacy users via Sanctum.
-- **Design**: "Deloitte Light Theme" (Deloitte Green/White/Clean/Professional).
+## 🎙️ Voice System
+
+The Matrix speaks through Piper TTS with unique voices per agent:
+
+```bash
+# Basic usage
+sh psi/matrix/voice.sh "Hello from the Matrix" "Oracle"
+
+# Available speakers
+Oracle, Neo, Trinity, Morpheus, Architect, Smith, Tank, Scribe, Mainframe, System
+```
+
+Voice models stored in `~/.claude/piper-voices/` (~400MB total).
+
+If Piper fails, automatic fallback to macOS `say` with alert message.
+
+## 🚀 Getting Started
+
+1. Run `./teleport.sh` to bootstrap
+2. Start Claude Code: `claude`
+3. Begin: `/oracle`
+
+See README.md for full documentation.
 
 ---
-*Portable Matrix Interface v3.2 — Mind Hierarchy Edition*
+*Portable Matrix Interface v3.3 — Voice Edition*

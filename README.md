@@ -28,9 +28,10 @@ matrix-reloaded is the **full operational Matrix** — everything you need to wo
 ```
 matrix-reloaded (Full Power)    vs     matrix-seed (Philosophy)
 ────────────────────────────           ─────────────────────────
-1.2MB, 180+ files                      244KB, 53 files
+13MB, 258 files                        244KB, 53 files
 39 workflows                           5 core workflows
 Full TTS voice system                  No voice
+9 agent voices (~400MB)                No voice
 Enter immediately                      Grow your own
 ```
 
@@ -53,13 +54,17 @@ Enter immediately                      Grow your own
 | Agent | Role | Voice | Command |
 |-------|------|-------|---------|
 | **Oracle** | Wisdom & Orchestration | Kristin (warm) | `/oracle` |
-| **Neo** | Code Implementation | Ryan | `/neo` |
-| **Trinity** | Design Leadership | — | `/trinity` |
-| **Morpheus** | External Research | Carlin | `/morpheus` |
+| **Neo** | Code Implementation | Ryan (high) | `/neo` |
+| **Trinity** | Design Leadership | Jenny | `/trinity` |
+| **Morpheus** | External Research | Carlin* | `/morpheus` |
 | **Architect** | System Design | Alan (British) | `/architect` |
-| **Smith** | Bug Hunting | Danny | `/smith` |
+| **Smith** | Bug Hunting | Danny (slow, bass) | `/smith` |
 | **Tank** | Internal Operations | Bryce | `/operator` |
-| **Scribe** | Documentation | — | `/rrr` |
+| **Scribe** | Documentation | Lessac | `/rrr` |
+| **Mainframe** | System Events | Norman | — |
+| **System** | Status Messages | HFC Male | — |
+
+*\* Carlin and Trump are custom fine-tuned voices (see Custom Voices below)*
 
 ## All 39 Commands
 
@@ -177,17 +182,48 @@ The Matrix uses tiered AI models for efficiency:
 
 The `teleport.sh` script handles everything:
 
-1. **Environment Check** — Verifies macOS, Homebrew
-2. **Python Setup** — Creates venv, installs piper-tts
-3. **Voice Model** — Downloads Kristin voice (~15MB)
-4. **Integration** — Configures hooks, permissions
-5. **Health Check** — Tests voice, announces ready
+1. **Environment Check** — Verifies macOS, architecture (Intel/Apple Silicon)
+2. **Homebrew Setup** — x86_64 Homebrew for Apple Silicon (Piper requires Rosetta)
+3. **Dependencies** — espeak-ng, Python 3.13, pipx (via x86_64 on Apple Silicon)
+4. **Piper TTS** — Installs via pipx with correct architecture
+5. **Voice Models** — Downloads 9 agent voices (~400MB)
+6. **Integration** — Configures hooks, permissions
+7. **Health Check** — Tests voice, announces ready
 
-Requirements:
-- macOS (Sonoma+)
-- Homebrew (installed automatically if missing)
+### Requirements
+- macOS (Sonoma+ recommended)
+- Homebrew (ARM64 at `/opt/homebrew`)
+- **Apple Silicon**: x86_64 Homebrew at `/usr/local` (script will prompt)
 - Claude Code CLI
-- ~100MB disk space (after voice model)
+- ~500MB disk space (after voice models)
+
+### Apple Silicon Note
+
+Piper TTS ships x86_64 binaries. On Apple Silicon (M1/M2/M3/M4), you need:
+1. Rosetta 2 (installed automatically)
+2. x86_64 Homebrew at `/usr/local`
+
+If missing, teleport.sh will display setup instructions.
+
+## Custom Voices
+
+Morpheus (carlin-high) and Trump are custom fine-tuned voices not available on Hugging Face.
+
+To add custom voices:
+1. Place `.onnx` and `.onnx.json` files in `~/.claude/piper-voices/`
+2. Name them to match voice.sh expectations (e.g., `en_US-carlin-high.onnx`)
+
+Training your own: See [Piper Training Guide](https://github.com/rhasspy/piper#training)
+
+## Fallback Mode
+
+If Piper fails, the voice system falls back to macOS `say` command with an alert:
+```
+⚠️  FALLBACK MODE: Piper TTS failed, using macOS say
+   Run: .claude/hooks/bootstrap-voice.sh --force
+```
+
+This ensures voice always works, even if Piper has issues.
 
 ## Related
 
